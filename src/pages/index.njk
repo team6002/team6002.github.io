@@ -1,0 +1,48 @@
+---
+layout: base
+permalink: /index.html
+title: 'This is ZooBOTix'
+description: 'Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics Competition (FRC).'
+blog:
+  title: 'Blog'
+  intro: "I'm showing the last 4 blog posts, but there might be more!"
+---
+
+<div class="wrapper">
+  <header class="full | section" style="--spot-color: var(--color-primary)">
+    <div class="section__inner flow region">
+      <h1 class="text-center" style="color: var(--color-light);">{{ title }}</h1>
+    </div>
+    {% svg "divider/waves", null, "divider" %}
+  </header>
+
+  <article class="full | region">
+    <div class="prose wrapper flow">
+      <h2 id="an-eleventy-starter">Who Are We?</h2>
+      <p>
+        Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics Competition (FRC).  We are dedicated to inspiring young minds in the fields of science, technology, engineering, and mathematics (STEM) through hands-on learning and teamwork. Our team is composed of passionate students who work together to design, build, and program robots to compete in annual FRC challenges. We believe in fostering a collaborative environment where creativity and innovation thrive, preparing our members for future careers in STEM fields.
+      </p>
+      <p>
+        Our team is supported by a group of dedicated mentors, sponsors, and volunteers who provide guidance and resources to help us succeed. We participate in various outreach activities to promote STEM education in our community, inspiring the next generation of engineers and innovators. Join us on our journey as we push the boundaries of technology and teamwork in the exciting world of robotics!
+      </p>
+    </div>
+  </article>
+
+  <section class="full | region">
+    <div class="prose wrapper flow">
+      <h2>{{ blog.title }}</h2>
+      {% if blog.intro %}
+        <p>{{ blog.intro }}</p>
+      {% endif %}
+      <div class="feature |  region region-space-l">
+        <custom-masonry layout="50-50">
+          {% set itemList = collections.allPosts %}
+					{% asyncEach item in itemList.slice(0, 4) %}
+            {% set headingLevel = "h3" %}
+						{% include "partials/card-blog.njk" %}
+					{% endeach %}
+        </custom-masonry>
+      </div>
+    </div>
+  </section>
+</div>
