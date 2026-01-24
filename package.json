@@ -1,8 +1,8 @@
 {
-  "name": "eleventy-excellent",
+  "name": "team6002.github.io",
   "version": "4.5.1",
-  "description": "Eleventy starter built around the workflow suggested by Andy Bell's buildexcellentwebsit.es.",
-  "author": "Lene Saile",
+  "description": "Official website for FIRST Robotics Competition Team 6002 - ZooBOTix",
+  "author": "Daniel Nguyen",
   "license": "ISC",
   "type": "module",
   "engines": {
@@ -27,7 +27,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/madrilene/eleventy-excellent.git"
+    "url": "https://github.com/team6002/team6002.github.io.git"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.1.2",
