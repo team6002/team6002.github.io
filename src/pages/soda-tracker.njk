@@ -34,6 +34,11 @@ soda_data:
             <div class="stat-unit">grams</div>
         </div>
         <div class="stat-card">
+            <h3>Total Caffeine</h3>
+            <div class="stat-value" id="total-caffeine">0</div>
+            <div class="stat-unit">milligrams</div>
+        </div>
+        <div class="stat-card">
             <h3>Recycling Value</h3>
             <div class="stat-value" id="recycling-value">$0.00</div>
             <div class="stat-unit">earned back</div>
@@ -164,6 +169,7 @@ soda_data:
 
         document.getElementById('total-cans').innerText = totalCans;
         document.getElementById('total-sugar').innerText = totalSugar.toFixed(0);
+        document.getElementById('total-caffeine').innerText = totalCaffeine.toFixed(1);
         document.getElementById('recycling-value').innerText = `$${totalVal.toFixed(2)}`;
     }
     // --- STATISTICS LOGIC ---
@@ -172,6 +178,7 @@ soda_data:
         const tableRows = document.querySelectorAll('#soda-table tbody tr');
         let totalCans = 0;
         let totalSugar = 0;
+        let totalCaffeine = 0;
         let totalRecyclingValue = 0;
 
         tableRows.forEach(row => {
@@ -181,15 +188,18 @@ soda_data:
             
             const cans = parseInt(cells[1].textContent) || 0;
             const sugar = parseFloat(cells[2].textContent) || 0;
-            const recycling = parseFloat(cells[3].textContent.replace("$", "")) || 0;
+            const caffeine = parseFloat(cells[3].textContent) || 0;
+            const recycling = parseFloat(cells[4].textContent.replace("$", "")) || 0;
 
             totalCans += cans;
             totalSugar += sugar;
+            totalCaffeine += caffeine;
             totalRecyclingValue += recycling;
         });
 
         document.getElementById("total-cans").textContent = totalCans;
         document.getElementById("total-sugar").textContent = totalSugar.toFixed(0);
+        document.getElementById("total-caffeine").textContent = totalCaffeine.toFixed(1);
         document.getElementById("recycling-value").textContent = "$" + totalRecyclingValue.toFixed(2);
     }
 
