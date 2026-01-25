@@ -1,9 +1,9 @@
 ---
+# Credit to Chris for the original version of this page
 layout: soda.njk
 title: Soda Tracker - Dashboard
 permalink: /soda-tracker/
 year: 2026
-# Define your data here to make the table dynamic
 soda_data:
   - name: Cherry Pepsi
     count: 2
@@ -49,19 +49,20 @@ soda_data:
                 <th>Soda Type</th>
                 <th>Cans</th>
                 <th>Sugar (g)</th>
+                <th>Caffeine (mg)</th>
                 <th>Recycling Value</th>
             </tr>
         </thead>
-        <tbody>
-            {# Nunjucks Loop: Generates rows based on the data in Front Matter #}
-            {% for soda in soda_data %}
+        <tbody id="soda-table-body">
+            {# {% for soda in soda_data %}
             <tr>
                 <td class="soda-name">{{ soda.name }}</td>
                 <td class="number-cell">{{ soda.count }}</td>
                 <td class="number-cell">{{ soda.sugar }}</td>
-                <td class="number-cell">${{ soda.value }}</td>
+                <td class="number-cell">${{ soda.value | number: 2 }}</td>
             </tr>
-            {% endfor %}
+            {% endfor %} #}
+            
         </tbody>
     </table>
 </div>
@@ -80,6 +81,91 @@ soda_data:
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
+    // --- GOOGLE DOCS IMPORT ---
+    // Imports the soda consumption data from a Google Sheet
+
+    const SHEET_ID = '1UA9edau7Zq3coGya3BTKkDfbAidJtp_O0oNkZ_qzEbg';
+    // Note: replace 'Logs' and 'Facts' with your actual tab names
+    const LOGS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Logs`;
+    const FACTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Facts`;
+
+    async function initDashboard() {
+        try {
+            const [logsRes, factsRes] = await Promise.all([fetch(LOGS_URL), fetch(FACTS_URL)]);
+            const logsText = await logsRes.text();
+            const factsText = await factsRes.text();
+
+            // Helper to strip Google's JSON wrapper
+            const parse = (txt) => JSON.parse(txt.match(/(?<="table":).*(?=}\);)/g)[0]);
+            
+            const logsData = parse(logsText).rows;
+            const factsData = parse(factsText).rows;
+
+            // 1. Map Nutritional Facts (Name -> {sugar, caffeine, value})
+            const factsMap = {};
+            factsData.forEach(row => {
+                const name = row.c[0]?.v;
+                factsMap[name] = {
+                    sugar: row.c[1]?.v || 0,
+                    caffeine: row.c[2]?.v || 0,
+                    value: row.c[3]?.v || 0
+                };
+            });
+
+            // 2. Process Logs & Aggregate
+            const summary = {};
+            const dailyCounts = {}; // For the chart
+
+            logsData.forEach(row => {
+                const dateStr = row.c[0]?.f || row.c[0]?.v; // "Date" column
+                const qty = row.c[1]?.v || 0;             // "Quantity" column
+                const name = row.c[2]?.v;                 // "Name" column
+
+                // Aggregate for Table
+                if (!summary[name]) summary[name] = { qty: 0, sugar: 0, caffeine: 0, value: 0 };
+                const nutritional = factsMap[name] || { sugar: 0, caffeine: 0, value: 0 };
+                
+                summary[name].qty += qty;
+                summary[name].sugar += (qty * nutritional.sugar);
+                summary[name].caffeine += (qty * nutritional.caffeine);
+                summary[name].value += (qty * nutritional.value);
+
+                // Aggregate for Chart (by date)
+                dailyCounts[dateStr] = (dailyCounts[dateStr] || 0) + qty;
+            });
+    
+            renderTable(summary);
+            initChartData(dailyCounts);
+            createChart('week');
+        } catch (err) {
+            console.error("Data sync failed:", err);
+        }
+    }
+
+    function renderTable(summary) {
+        const tbody = document.getElementById('soda-table-body');
+        let totalCans = 0, totalSugar = 0, totalVal = 0, totalCaffeine = 0;
+
+        Object.entries(summary).forEach(([name, data]) => {
+            totalCans += data.qty;
+            totalSugar += data.sugar;
+            totalVal += data.value;
+            totalCaffeine += data.caffeine;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td class="soda-name">${name}</td>
+                    <td class="number-cell">${data.qty}</td>
+                    <td class="number-cell">${data.sugar.toFixed(0)}g</td>
+                    <td class="number-cell">${data.caffeine.toFixed(1)}mg</td>
+                    <td class="number-cell">$${data.value.toFixed(2)}</td>
+                </tr>`;
+        });
+
+        document.getElementById('total-cans').innerText = totalCans;
+        document.getElementById('total-sugar').innerText = totalSugar.toFixed(0);
+        document.getElementById('recycling-value').innerText = `$${totalVal.toFixed(2)}`;
+    }
     // --- STATISTICS LOGIC ---
     // This runs on the client side to sum up the table rows generated by Nunjucks
     function updateOverallStatistics() {
@@ -107,21 +193,56 @@ soda_data:
         document.getElementById("recycling-value").textContent = "$" + totalRecyclingValue.toFixed(2);
     }
 
-    // --- CHART LOGIC ---
     const chartData = {
-        week: {
-            labels: ['Jan 10', 'Jan 11', 'Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16'],
-            data: [2, 0, 0, 2, 0, 1, 1]
-        },
-        month: {
-            labels: ['Jan 10', 'Jan 11', 'Jan 12', 'Jan 13', 'Jan 14', 'Jan 15', 'Jan 16'],
-            data: [2, 0, 0, 2, 0, 1, 1]
-        },
-        season: {
-            labels: ['Week 1'],
-            data: [6]
-        }
+        week: { labels: [], data: [] },
+        month: { labels: [], data: [] },
+        season: { labels: [], data: [] }
     };
+
+    function initChartData(dailyCounts) {
+        const rawDates = Object.keys(dailyCounts).sort((a, b) => new Date(a) - new Date(b));
+        
+        if (rawDates.length === 0) return;
+
+        const allDates = [];
+        const allCounts = [];
+        
+        // 1. Define the start and end of your range
+        let currentDate = new Date(rawDates[0]);
+        const lastDate = new Date(rawDates[rawDates.length - 1]);
+
+        // 2. Loop through every single day
+        while (currentDate <= lastDate) {
+            // Format key to match your hashmap format (likely YYYY-MM-DD)
+            const dateStr = currentDate.toLocaleDateString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: 'numeric'
+            });;
+            allDates.push(dateStr);
+            // 3. Use the count if it exists, otherwise default to 0
+            allCounts.push(dailyCounts[dateStr] || 0);
+            // Increment by 1 day
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        // Helper to slice and format labels
+        const getRange = (days) => {
+            const sliceSize = days === 0 ? 0 : -days;
+            return {
+                labels: allDates.slice(sliceSize).map(d => 
+                    new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                ),
+                data: allCounts.slice(sliceSize)
+            };
+        };
+
+        // Populate your chartData object
+        chartData.week = getRange(7);
+        chartData.month = getRange(30);
+        chartData.season = getRange(0); // '0' to take the full sorted range
+        
+    }
 
     let currentChart = null;
 
@@ -130,6 +251,7 @@ soda_data:
         if (currentChart) currentChart.destroy();
 
         const data = chartData[range];
+        console.log(chartData);
 
         currentChart = new Chart(ctx, {
             type: 'line',
@@ -173,8 +295,8 @@ soda_data:
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        initDashboard();
         updateOverallStatistics();
-        createChart('week');
     });
 
     document.querySelectorAll('.time-range-btn').forEach(btn => {
