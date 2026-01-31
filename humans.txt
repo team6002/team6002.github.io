@@ -1,5 +1,5 @@
 
-/* TEAM */ Developer:  Contact:  Site:
-
+/* TEAM */ Developer: Daniel Nguyen Contact: daniel.baohung.nguyen@gmail.com Site:
+https://github.com/Heedx
 
 /* SITE */ Doctype: HTML5
