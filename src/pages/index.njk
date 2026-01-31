@@ -9,9 +9,34 @@ blog:
 ---
 
 <div class="wrapper">
-  <header class="full | section" style="--spot-color: var(--color-primary)">
-    <div class="section__inner flow region">
-      <h1 class="text-center" style="color: var(--color-light);">{{ title }}</h1>
+  <header class="full | section" 
+        style="--spot-color: var(--color-primary); 
+              background-blend-mode: multiply;">
+    <div class="section__inner">
+      <div class="hero" data-variant="dimmed masked">
+        <img src="/assets/images/worlds_team_photo.jpg" 
+            alt="2025 Worlds ZooBOTix Team Photo" 
+            class="hero__image">
+        
+        <h1 class="hero__title shadow-halo" 
+            style="fontSize: var(--size-step-5);
+            --color-text: white">
+            {{ title }}
+        </h1>
+        {# Buttons for navigating to different teams #}
+        <div class="hero__actions">
+            <a href="/about/FRC/" class="button" data-button-variant="primary">FRC</a>
+            <a href="/about/FTC/" class="button" data-button-variant="primary">FTC</a>
+            <a href="/about/FLL/" class="button" data-button-variant="primary">FLL</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section__inner flow region"
+          id="slogan">
+      <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Fast</em></h2>
+      <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Frequently</em></h2>
+      <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Forward</em></h2>
     </div>
     {% svg "divider/pixels", null, "divider" %}
   </header>
@@ -46,3 +71,31 @@ blog:
     </div>
   </section>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const flyInElements = document.querySelectorAll(".fly-in");
+    
+    const observerCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    flyInElements.forEach((element, index) => {
+      element.style.transitionDelay = `${index * 0.2}s`;
+      observer.observe(element);
+    });
+  });
+</script>

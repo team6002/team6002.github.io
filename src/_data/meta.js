@@ -10,8 +10,13 @@ export const skipContent = 'Skip to content';
 export const author = {
   name: 'Daniel Nguyen', // i.e. Lene Saile - page / blog author's name. Must be set.
   avatar: '/icon-512x512.png', // path to the author's avatar. In this case just using a favicon.
-  email: '', // i.e. hola@lenesaile.com - email of the author
-  website: '', // i.e. https.://www.lenesaile.com - the personal site of the author
+  email: 'daniel.baohung.nguyen@gmail.com', // i.e. hola@lenesaile.com - email of the author
+  website: 'https://github.com/Heedx', // i.e. https.://www.lenesaile.com - the personal site of the author
+};
+export const creator = {
+  name: 'Daniel Nguyen', // i.e. Lene Saile - page / blog author's name. Must be set.
+  email: 'daniel.baohung.nguyen@gmail.com', // i.e. hola@lenesaile.com - email of the author
+  website: 'https://github.com/Heedx', // i.e. https.://www.lenesaile.com - the personal site of the author
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
 export const themeColor = '#dd4462'; // used in manifest, for example primary color value

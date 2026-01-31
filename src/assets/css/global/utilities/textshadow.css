@@ -1,0 +1,13 @@
+.shadow-distinct {
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  
+  text-shadow: 
+    0 2px 4px var(--shadow-color),
+    0 4px 12px var(--shadow-color);
+}
+
+.shadow-halo {
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.8), 
+    0 0 20px rgba(0, 0, 0, 0.5);
+}

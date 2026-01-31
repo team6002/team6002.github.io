@@ -15,6 +15,10 @@ export default {
   ],
   bottom: [
     {
+      text: 'Style Guide',
+      url: '/styleguide/'
+    },
+    {
       text: 'Imprint',
       url: '/imprint/'
     },
