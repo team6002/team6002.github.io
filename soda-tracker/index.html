@@ -118,6 +118,11 @@
             <div class="stat-unit">milligrams</div>
         </div>
         <div class="stat-card">
+            <h3>Total Calories</h3>
+            <div id="total-calories" class="stat-value">0</div>
+            <div class="stat-unit">kcal</div>
+        </div>
+        <div class="stat-card">
             <h3>Recycling Value</h3>
             <div id="recycling-value" class="stat-value">$0.00</div>
             <div class="stat-unit">earned back</div>
@@ -134,6 +139,7 @@
                 <th>Cans</th>
                 <th>Sugar (g)</th>
                 <th>Caffeine (mg)</th>
+                <th>Calories</th>
                 <th>Recycling Value</th>
             </tr>
         </thead>
@@ -178,14 +184,15 @@
             const logsData = parse(logsText).rows;
             const factsData = parse(factsText).rows;
 
-            // 1. Map Nutritional Facts (Name -> {sugar, caffeine, value})
+            // 1. Map Nutritional Facts (Name -> {sugar, caffeine, calories, value})
             const factsMap = {};
             factsData.forEach(row => {
                 const name = row.c[0]?.v;
                 factsMap[name] = {
                     sugar: row.c[1]?.v || 0,
                     caffeine: row.c[2]?.v || 0,
-                    value: row.c[3]?.v || 0
+                    calories: row.c[3]?.v || 0,
+                    value: row.c[4]?.v || 0
                 };
             });
 
@@ -199,12 +206,13 @@
                 const name = row.c[2]?.v;                 // "Name" column
 
                 // Aggregate for Table
-                if (!summary[name]) summary[name] = { qty: 0, sugar: 0, caffeine: 0, value: 0 };
-                const nutritional = factsMap[name] || { sugar: 0, caffeine: 0, value: 0 };
+                if (!summary[name]) summary[name] = { qty: 0, sugar: 0, caffeine: 0, calories: 0, value: 0 };
+                const nutritional = factsMap[name] || { sugar: 0, caffeine: 0, calories: 0, value: 0 };
                 
                 summary[name].qty += qty;
                 summary[name].sugar += (qty * nutritional.sugar);
                 summary[name].caffeine += (qty * nutritional.caffeine);
+                summary[name].calories += (qty * nutritional.calories);
                 summary[name].value += (qty * nutritional.value);
 
                 // Aggregate for Chart (by date)
@@ -221,13 +229,14 @@
 
     function renderTable(summary) {
         const tbody = document.getElementById('soda-table-body');
-        let totalCans = 0, totalSugar = 0, totalVal = 0, totalCaffeine = 0;
+        let totalCans = 0, totalSugar = 0, totalVal = 0, totalCaffeine = 0, totalCalories = 0;
 
         Object.entries(summary).forEach(([name, data]) => {
             totalCans += data.qty;
             totalSugar += data.sugar;
             totalVal += data.value;
             totalCaffeine += data.caffeine;
+            totalCalories += data.calories;
 
             tbody.innerHTML += `
                 <tr>
@@ -235,6 +244,7 @@
                     <td class="number-cell">${data.qty}</td>
                     <td class="number-cell">${data.sugar.toFixed(0)}g</td>
                     <td class="number-cell">${data.caffeine.toFixed(1)}mg</td>
+                    <td class="number-cell">${data.calories.toFixed(0)}</td>
                     <td class="number-cell">$${data.value.toFixed(2)}</td>
                 </tr>`;
         });
@@ -242,6 +252,7 @@
         document.getElementById('total-cans').innerText = totalCans;
         document.getElementById('total-sugar').innerText = totalSugar.toFixed(0);
         document.getElementById('total-caffeine').innerText = totalCaffeine.toFixed(1);
+        document.getElementById('total-calories').innerText = totalCalories.toFixed(0);
         document.getElementById('recycling-value').innerText = `$${totalVal.toFixed(2)}`;
     }
     // --- STATISTICS LOGIC ---
@@ -251,27 +262,31 @@
         let totalCans = 0;
         let totalSugar = 0;
         let totalCaffeine = 0;
+        let totalCalories = 0;
         let totalRecyclingValue = 0;
 
         tableRows.forEach(row => {
             const cells = row.cells;
             // The logic matches your original structure:
-            // cells[1] = count, cells[2] = sugar, cells[3] = value ($)
+            // cells[1] = count, cells[2] = sugar, cells[3] = caffeine, cells[4] = calories, cells[5] = value ($)
             
             const cans = parseInt(cells[1].textContent) || 0;
             const sugar = parseFloat(cells[2].textContent) || 0;
             const caffeine = parseFloat(cells[3].textContent) || 0;
-            const recycling = parseFloat(cells[4].textContent.replace("$", "")) || 0;
+            const calories = parseFloat(cells[4].textContent) || 0;
+            const recycling = parseFloat(cells[5].textContent.replace("$", "")) || 0;
 
             totalCans += cans;
             totalSugar += sugar;
             totalCaffeine += caffeine;
+            totalCalories += calories;
             totalRecyclingValue += recycling;
         });
 
         document.getElementById("total-cans").textContent = totalCans;
         document.getElementById("total-sugar").textContent = totalSugar.toFixed(0);
         document.getElementById("total-caffeine").textContent = totalCaffeine.toFixed(1);
+        document.getElementById("total-calories").textContent = totalCalories.toFixed(0);
         document.getElementById("recycling-value").textContent = "$" + totalRecyclingValue.toFixed(2);
     }
 
