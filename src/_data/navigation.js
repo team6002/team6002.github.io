@@ -23,6 +23,10 @@ export default {
       ]
     },
     {
+      text: 'Impact',
+      url: '/impact/'
+    },
+    {
       text: 'Blog',
       url: '/blog/'
     },

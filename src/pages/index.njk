@@ -2,38 +2,33 @@
 layout: base
 permalink: /index.html
 title: 'This is ZooBOTix'
-description: 'Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics Competition (FRC).'
-blog:
-  title: 'Blog'
-  intro: "I'm showing the last 4 blog posts, but there might be more!"
+description: 'Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics
+Competition (FRC).'
+blog: 'Blog'
+intro: "I'm showing the last 4 blog posts, but there might be more!"
 ---
 
 <div class="wrapper">
-  <header class="full | section" 
-        style="--spot-color: var(--color-primary); 
+  <header class="full | section" style="--spot-color: var(--color-primary); 
               background-blend-mode: multiply;">
     <div class="section__inner">
       <div class="hero" data-variant="dimmed masked">
-        <img src="/assets/images/worlds_team_photo.jpg" 
-            alt="2025 Worlds ZooBOTix Team Photo" 
-            class="hero__image">
-        
-        <h1 class="hero__title shadow-halo" 
-            style="fontSize: var(--size-step-5);
+        <img src="/assets/images/worlds_team_photo.jpg" alt="2025 Worlds ZooBOTix Team Photo" class="hero__image">
+
+        <h1 class="hero__title shadow-halo" style="fontSize: var(--size-step-5);
             --color-text: white">
-            {{ title }}
+          {{ title }}
         </h1>
         {# Buttons for navigating to different teams #}
         <div class="hero__actions">
-            <a href="/about/FRC/" class="button" data-button-variant="primary">FRC</a>
-            <a href="/about/FTC/" class="button" data-button-variant="primary">FTC</a>
-            <a href="/about/FLL/" class="button" data-button-variant="primary">FLL</a>
+          <a href="/about/FRC/" class="button" data-button-variant="primary">FRC</a>
+          <a href="/about/FTC/" class="button" data-button-variant="primary">FTC</a>
+          <a href="/about/FLL/" class="button" data-button-variant="primary">FLL</a>
         </div>
       </div>
     </div>
 
-    <div class="section__inner flow region"
-          id="slogan">
+    <div class="section__inner flow region" id="slogan">
       <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Fast</em></h2>
       <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Frequently</em></h2>
       <h2 class="fly-in" style="color: white; text-align: center"><em>Fail Forward</em></h2>
@@ -45,10 +40,18 @@ blog:
     <div class="prose wrapper flow">
       <h2 id="an-eleventy-starter">Who Are We?</h2>
       <p>
-        Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics Competition (FRC).  We are dedicated to inspiring young minds in the fields of science, technology, engineering, and mathematics (STEM) through hands-on learning and teamwork. Our team is composed of passionate students who work together to design, build, and program robots to compete in annual FRC challenges. We believe in fostering a collaborative environment where creativity and innovation thrive, preparing our members for future careers in STEM fields.
+        Team 6002 ZooBOTix is a robotics team from Kalamazoo Michigan that competes in the FIRST Robotics Competition
+        (FRC). We are dedicated to inspiring young minds in the fields of science, technology, engineering, and
+        mathematics (STEM) through hands-on learning and teamwork. Our team is composed of passionate students who work
+        together to design, build, and program robots to compete in annual FRC challenges. We believe in fostering a
+        collaborative environment where creativity and innovation thrive, preparing our members for future careers in
+        STEM fields.
       </p>
       <p>
-        Our team is supported by a group of dedicated mentors, sponsors, and volunteers who provide guidance and resources to help us succeed. We participate in various outreach activities to promote STEM education in our community, inspiring the next generation of engineers and innovators. Join us on our journey as we push the boundaries of technology and teamwork in the exciting world of robotics!
+        Our team is supported by a group of dedicated mentors, sponsors, and volunteers who provide guidance and
+        resources to help us succeed. We participate in various outreach activities to promote STEM education in our
+        community, inspiring the next generation of engineers and innovators. Join us on our journey as we push the
+        boundaries of technology and teamwork in the exciting world of robotics!
       </p>
     </div>
   </article>
@@ -57,15 +60,15 @@ blog:
     <div class="prose wrapper flow">
       <h2>{{ blog.title }}</h2>
       {% if blog.intro %}
-        <p>{{ blog.intro }}</p>
+      <p>{{ blog.intro }}</p>
       {% endif %}
       <div class="feature |  region region-space-l">
         <custom-masonry layout="50-50">
           {% set itemList = collections.allPosts %}
-					{% asyncEach item in itemList.slice(0, 4) %}
-            {% set headingLevel = "h3" %}
-						{% include "partials/card-blog.njk" %}
-					{% endeach %}
+          {% asyncEach item in itemList.slice(0, 4) %}
+          {% set headingLevel = "h3" %}
+          {% include "partials/card-blog.njk" %}
+          {% endeach %}
         </custom-masonry>
       </div>
     </div>
@@ -75,7 +78,7 @@ blog:
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const flyInElements = document.querySelectorAll(".fly-in");
-    
+
     const observerCallback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
