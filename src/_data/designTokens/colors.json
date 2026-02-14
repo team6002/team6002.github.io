@@ -65,6 +65,14 @@
     {
       "name": "ZooBOTix Orange",
       "value": "#E86F1D"
+    },
+    {
+      "name": "ZooBOTix Orange Subdued",
+      "value": "#f1c15b"
+    },
+    {
+      "name": "Orange Red",
+      "value": "#ff4500"
     }
   ]
 }

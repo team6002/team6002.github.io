@@ -5,6 +5,10 @@ export default {
       url: '/about/',
       submenu: [
         {
+          text: 'Team',
+          url: '/about/team/'
+        },
+        {
           text: 'FRC',
           url: '/about/FRC/'
         },
@@ -17,10 +21,6 @@ export default {
           url: '/about/FLL/'
         },
       ]
-    },
-    {
-      text: 'Docs',
-      url: '/get-started/'
     },
     {
       text: 'Blog',
