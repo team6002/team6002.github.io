@@ -11,6 +11,11 @@ export default {
     {
       text: 'Blog',
       url: '/blog/'
+    },
+    {
+      text: 'Merch',
+      url: 'https://www.purekalamazoo.com/zoobotix',
+      external: true
     }
   ],
   bottom: [

@@ -40,7 +40,12 @@
               |
               safe
             }}
-            >{{ item.text }}</a
+            >
+              {{ item.text }}
+              {% if item.external %}
+                {% svg "misc/external-link" %}
+              {% endif %}
+            </a
           >
         </li>
       {% endif %}
