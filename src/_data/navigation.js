@@ -2,7 +2,21 @@ export default {
   top: [
     {
       text: 'About',
-      url: '/about/'
+      url: '/about/',
+      submenu: [
+        {
+          text: 'FRC',
+          url: '/about/FRC/'
+        },
+        {
+          text: 'FTC',
+          url: '/about/FTC/'
+        },
+        {
+          text: 'FLL',
+          url: '/about/FLL/'
+        },
+      ]
     },
     {
       text: 'Docs',
