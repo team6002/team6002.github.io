@@ -1,0 +1,58 @@
+---
+layout: base
+title: ZooBOTix Gallery
+description: Pictures of Team 6002's journey through the years
+permalink: /gallery/
+---
+
+<div class="wrapper">
+  <header class="full | section" style="--spot-color: var(--color-primary)">
+    <div class="section__inner flow region">
+      <h1 class="text-center" style="color: var(--color-light);">{{ title }}</h1>
+    </div>
+    {% svg "divider/pixels", null, "divider" %}
+  </header>
+
+  <article class="full | region">
+    <div class="wrapper flow">
+      <custom-masonry>
+        <is-land on:idle>
+          <div class="gallery | grid mt-l-xl gutter-xs" role="list">
+            {%- set galleryItems = collections.gallery -%}
+            {# Add logos for testing as requested #}
+            {%- set logo1 = { image: "/assets/images/first-logos/FIRSTRobotics_iconHorz_RGB.gif", alt: "FRC Logo" } -%}
+            {%- set logo2 = { image: "/assets/images/first-logos/FIRSTTech_iconHorz_RGB.gif", alt: "FTC Logo" } -%}
+            {%- set logo3 = { image: "/assets/images/first-logos/FIRSTLego_iconHorz_RGB.gif", alt: "FLL Logo" } -%}
+            {%- set allGallery = (galleryItems.push(logo1, logo2, logo3), galleryItems) -%}
+
+            {%- for item in allGallery -%}
+              <dialog class="flow modal{{ loop.index }}">
+                <div class="cluster justify-center flow-space-m gutter-s">
+                  <button data-nav="prev" class="button text-step-1" data-button-variant="primary">
+                    <span class="visually-hidden">{{ meta.dialog.previous }}</span>{% svg "misc/arrow-left" %}
+                  </button>
+                  <button data-close class="button" autofocus data-button-variant="primary">
+                    {{ meta.dialog.close }}
+                  </button>
+                  <button data-nav="next" class="button text-step-1" data-button-variant="primary">
+                    <span class="visually-hidden">{{ meta.dialog.next }}</span>{% svg "misc/arrow-right" %}
+                  </button>
+                </div>
+                {%- image item.image, item.alt, item.caption -%}
+              </dialog>
+              <button data-index="{{ loop.index }}">{%- image item.image, item.alt -%}</button>
+            {%- endfor -%}
+          </div>
+
+          {% css "local" %}
+            {% include "css/gallery.css" %}
+          {% endcss %}
+
+          {% js "defer" %}
+            {% include "scripts/dialog.js" %}
+          {% endjs %}
+        </is-land>
+      </custom-masonry>
+    </div>
+  </article>
+</div>

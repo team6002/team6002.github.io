@@ -13,6 +13,7 @@ dotenv.config();
 
 // add yaml support
 import yaml from 'js-yaml';
+import fg from 'fast-glob';
 
 //  config import
 import {getAllPosts, showInSitemap, tagList} from './src/_config/collections.js';
@@ -42,6 +43,14 @@ export default async function (eleventyConfig) {
   eleventyConfig.addCollection('allPosts', getAllPosts);
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
+
+  eleventyConfig.addCollection('gallery', async () => {
+    const galleryImages = await fg(['src/assets/images/gallery-photos/*.{jpg,jpeg,png,webp,gif}']);
+    return galleryImages.map(image => ({
+      image: image.replace('src/', '/'),
+      alt: 'Gallery Image'
+    }));
+  });
 
   // ---------------------  Plugins
   eleventyConfig.addPlugin(plugins.htmlConfig);

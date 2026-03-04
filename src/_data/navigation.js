@@ -19,6 +19,10 @@ export default {
       ]
     },
     {
+      text: 'Gallery',
+      url: '/gallery/'
+    },
+    {
       text: 'Impact',
       url: '/impact/'
     },
