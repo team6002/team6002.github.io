@@ -1,0 +1,22 @@
+.light-only {
+  display: block;
+}
+.dark-only {
+  display: none;
+}
+
+[data-theme='dark'] .light-only {
+  display: none;
+}
+[data-theme='dark'] .dark-only {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .light-only {
+    display: none;
+  }
+  :root:not([data-theme='light']) .dark-only {
+    display: block;
+  }
+}
